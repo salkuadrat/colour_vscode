@@ -1,7 +1,7 @@
 {
 	"name": "fluttercolour",
 	"displayName": "fluttercolour",
-	"description": "Show color based on Colour",
+	"description": "Visual Studio Code Extension to show color of Colour",
 	"version": "0.0.1",
 	"publisher": "salkuadrat",
 	"engines": {
