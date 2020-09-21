@@ -7,6 +7,18 @@
 	"engines": {
 		"vscode": "^1.49.0"
 	},
+	"extensionKind": [
+		"workspace"
+	],
+	"license": "SEE LICENSE IN LICENSE",
+	"bugs": {
+		"url": "https://github.com/salkuadrat/colour_vscode/issues"
+	},
+	"homepage": "https://github.com/salkuadrat/colour_vscode",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/salkuadrat/colour_vscode.git"
+	},
 	"categories": [
 		"Other"
 	],
