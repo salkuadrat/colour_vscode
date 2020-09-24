@@ -1,13 +1,16 @@
 import * as vs from "vscode";
+import { flutterMaterialColors } from "./colors";
 
 export class ColourRangeComputer {
+  private readonly materialNameColorPattern = "Colours\\.(?<mc>[\\w_\\[\\]\\.]+)";
   private readonly colourConstructor1 = "\\bColour\\(\\s*0x(?<col1>[A-Fa-f0-9]{8})(,\\s*(?<op1>[.?\\d]+)){0,1},{0,1}\\s*\\)";
-  private readonly colourConstructor2 = "\\bColour\\(\\s*(?:'|\")#{0,1}(?<col2>[A-Fa-f0-9]{6})(?:'|\")(,\\s*(?<op2>[.?\\d]+)){0,1},{0,1}\\s*\\)";
-  private readonly colourConstructor3 = "\\bColour\\(\\s*(?:'|\")#{0,1}(?<col3>[A-Fa-f0-9]{8})(?:'|\")(,\\s*(?<op3>[.?\\d]+)){0,1},{0,1}\\s*\\)";
+  private readonly colourConstructor2 = "\\b\\(\\s*(?:'|\")#{0,1}(?<col2>[A-Fa-f0-9]{6})(?:'|\")(,\\s*(?<op2>[.?\\d]+)){0,1},{0,1}\\s*\\)";
+  private readonly colourConstructor3 = "\\b\\(\\s*(?:'|\")#{0,1}(?<col3>[A-Fa-f0-9]{8})(?:'|\")(,\\s*(?<op3>[.?\\d]+)){0,1},{0,1}\\s*\\)";
 	private readonly colourConstructorRgb = "\\bColour\\(\\s*(?<rgbR>[\\w_]+),\\s*(?<rgbG>[\\w_]+),\\s*(?<rgbB>[\\w_]+),{0,1}\\s*\\)";
   private readonly colourConstructorRgb4 = "\\bColour\\(\\s*(?<rgb1>[\\w_]+),\\s*(?<rgb2>[\\w_]+),\\s*(?<rgb3>[\\w_]+),\\s*(?<rgb4>[.?\\d]+),{0,1}\\s*\\)";
 
   private readonly allColours = [
+    this.materialNameColorPattern,
     this.colourConstructor1,
     this.colourConstructor2,
     this.colourConstructor3,
@@ -34,8 +37,10 @@ export class ColourRangeComputer {
       }
 
       let colorHex: string | undefined;
-
-      if(result.groups.col1) {
+      if(result.groups.mc) {
+        colorHex = this.extractMaterialColor(result.groups.mc);
+      }
+      else if(result.groups.col1) {
         colorHex = result.groups.col1.toLowerCase();
 
         if(result.groups.op1) {
@@ -112,6 +117,16 @@ export class ColourRangeComputer {
   private toRange(document: vs.TextDocument, offset: number, length: number): vs.Range {
     return new vs.Range(document.positionAt(offset), document.positionAt(offset + length));
   }
+
+  private extractMaterialColor(input: string): string | undefined {
+		const colorName = input.replace(/\.shade(\d+)/, "[$1]");
+
+		if(colorName in flutterMaterialColors) {
+      return (flutterMaterialColors[colorName]).toLowerCase();
+    }
+
+    return;
+	}
 
   private extractRgbColor(inputR: string, inputG: string, inputB: string): string | undefined {
 		const r = parseInt(inputR);

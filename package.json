@@ -2,7 +2,7 @@
 	"name": "fluttercolour",
 	"displayName": "fluttercolour",
 	"description": "Visual Studio Code Extension to show color of Colour",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "salkuadrat",
 	"engines": {
 		"vscode": "^1.49.0"
